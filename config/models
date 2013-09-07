@@ -15,16 +15,18 @@ Equipment
     UniqueEquipmentName name
 
 Shipbuild
+    userId UserId
     shipId ShipId
-    created UTCTime default=CURRENT_TIME
+    posted UTCTime default=CURRENT_TIME
     secretary ShipId
     secretaryLv Int
     headquartersLv Int
     resourceId ResourceId
 
 Develop
-    equipmentId 
-    created UTCTime default=CURRENT_TIME
+    userId UserId
+    equipmentId EquipmentId
+    posted UTCTime default=CURRENT_TIME
     secretary ShipId
     secretaryLv Int
     headquartersLv Int
