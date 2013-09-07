@@ -13,7 +13,7 @@ import Yesod.Default.Main
 import Yesod.Default.Handlers
 import Network.Wai.Middleware.RequestLogger
 import qualified Database.Persist
-import Database.Persist.Sql (runMigration)
+import Database.Persist.Sql (runMigration, SqlPersist)
 import Network.HTTP.Conduit (newManager, def)
 import Control.Monad.Logger (runLoggingT)
 import System.IO (stdout)
@@ -23,6 +23,8 @@ import System.Log.FastLogger (mkLogger)
 -- Don't forget to add new modules to your cabal file!
 import Handler.Home
 import Handler.Recipe
+
+import Data.Conduit
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
@@ -68,12 +70,17 @@ makeFoundation conf = do
         (Database.Persist.runPool dbconf (runMigration migrateAll) p)
         (messageLoggerSource foundation logger)
 
-    return foundation
+    runResourceT $ runLoggingT
+        (Database.Persist.runPool dbconf (insert $ User "test user" Nothing) p)
+        (messageLoggerSource foundation logger)
 
+    return foundation
+  
 -- for yesod devel
 getApplicationDev :: IO (Int, Application)
 getApplicationDev =
     defaultDevelApp loader makeApplication
+
   where
     loader = Yesod.Default.Config.loadConfig (configSettings Development)
         { csParseExtra = parseExtra
