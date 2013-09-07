@@ -3,10 +3,37 @@ User
     password Text Maybe
     UniqueUser ident
     deriving Typeable
-Email
-    email Text
-    user UserId Maybe
-    verkey Text Maybe
-    UniqueEmail email
+
+Ship
+    libNo Int
+    name String
+    UniqueShipName name
+
+Equipment
+    libNo Int
+    name String
+    UniqueEquipmentName name
+
+Shipbuild
+    shipId ShipId
+    created UTCTime default=CURRENT_TIME
+    secretary ShipId
+    secretaryLv Int
+    headquartersLv Int
+    resourceId ResourceId
+
+Develop
+    equipmentId 
+    created UTCTime default=CURRENT_TIME
+    secretary ShipId
+    secretaryLv Int
+    headquartersLv Int
+    resourceId ResourceId
+
+Resource
+    fuel Int
+    ammunition Int
+    steel Int
+    bauxite Int
 
  -- By default this file is used in Model.hs (which is imported by Foundation.hs)
