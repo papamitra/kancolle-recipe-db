@@ -26,8 +26,30 @@ for (row, ship) in ships.items():
     if (not ship.has_key(1)) or ship[1]=="" or ship[1]=="艦名" :
         del ships[row]
 
-shipid = 1
-for (row, ship) in ships.items():
+max_shipno = 1
+shipcsv = {}
+
+try:
+    with open("ships.csv", "r") as f:
+        for line in f.readlines():
+            (id, name) = line.rstrip().split(",")
+            shipcsv[name] = int(id)
+
+except IOError as (errno, strerror):
+    print >> sys.stderr, strerror
+
+
+for (row, ship) in sorted(ships.items()):
+    if shipcsv.has_key(ship[NAME]):
+        shipid = shipcsv[ship[NAME]]
+    else:
+        shipid = max_shipno
+        shipcsv[ship[NAME]] = shipid
+        max_shipno += 1
+
     print "insert into 'ship' values (%d, %s, '%s');" % (shipid, ship[LIBNO], ship[NAME])
-    shipid += 1
+
+with open("ships.csv", "w") as f:
+    for (id, name) in sorted([(id, name) for (name , id) in shipcsv.items()]):
+        print >> f, "%d,%s" % (id, name)
 
