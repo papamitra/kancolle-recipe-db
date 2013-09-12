@@ -34,7 +34,7 @@ try:
         for line in f.readlines():
             (id, name) = line.rstrip().split(",")
             shipcsv[name] = int(id)
-
+    max_shipno = max(shipcsv.values()) + 1
 except IOError as (errno, strerror):
     print >> sys.stderr, strerror
 
@@ -48,6 +48,17 @@ for (row, ship) in sorted(ships.items()):
         max_shipno += 1
 
     print "insert into 'ship' values (%d, %s, '%s');" % (shipid, ship[LIBNO], ship[NAME])
+
+REMODEL=4
+for (row, ship) in sorted(ships.items()):
+    if (not ship.has_key(REMODEL)) or ship[REMODEL] == "": continue
+    m = re.search(r"\d+/(?:<a.*?>)?(.*?)(?:</a>)?$", ship[REMODEL])
+    if m:
+        shipname = m.group(1)
+        if not shipcsv.has_key(shipname):
+            print "insert into 'ship' values (%d, %s, '%s');" % (max_shipno, -1, shipname)
+            shipcsv[shipname] = max_shipno
+            max_shipno += 1
 
 with open("ships.csv", "w") as f:
     for (id, name) in sorted([(id, name) for (name , id) in shipcsv.items()]):
