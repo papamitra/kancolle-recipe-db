@@ -71,7 +71,7 @@ makeFoundation conf = do
         (messageLoggerSource foundation logger)
 
     runResourceT $ runLoggingT
-        (Database.Persist.runPool dbconf (insert $ User "test user" Nothing) p)
+        (Database.Persist.runPool dbconf (insertBy $ User "test user" Nothing) p)
         (messageLoggerSource foundation logger)
 
     return foundation
