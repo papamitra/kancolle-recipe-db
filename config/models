@@ -37,5 +37,6 @@ Resource
     ammunition Int
     steel Int
     bauxite Int
+    UniqueResource fuel ammunition steel bauxite
 
  -- By default this file is used in Model.hs (which is imported by Foundation.hs)
