@@ -4,14 +4,16 @@ module Handler.Recipe where
 
 import Import
 
-import Data.Text(pack)
+import Data.Text(pack, unpack)
 import Yesod.Form.Fields
 import Data.Time
-
+  
 getRecipeR :: Handler Html
 getRecipeR = do
   recipes <- runDB $ selectList [] [Desc ShipbuildPosted]
-  (widget, enctype) <- generateFormPost recipeForm
+  sess <- (lookupSession (pack "recipe"))
+  let recipeSess = sess >>= (return . read . unpack) :: Maybe Recipe
+  (widget, enctype) <- generateFormPost $ recipeForm recipeSess
   defaultLayout $ do
     setTitle "recipe"
     [whamlet|
@@ -35,16 +37,23 @@ $else
 
 |]
 
-data Recipe = Recipe Int ShipId Int Int Int Int Int ShipId deriving (Show)
-recipeForm :: Html -> MForm Handler (FormResult Recipe, Widget)
-recipeForm = renderDivs $ Recipe
-             <$> areq intField "鎮守府Lv" Nothing
-             <*> areq (selectField shipList) "Secretary" Nothing
-             <*> areq intField "Secretary Lv" Nothing
-             <*> areq intField "燃料" Nothing
-             <*> areq intField "弾薬" Nothing
-             <*> areq intField "鋼材" Nothing
-             <*> areq intField "ボーキサイト" Nothing
+data Recipe = Recipe {hqLv::Int,
+                      secId::ShipId,
+                      secLv::Int,
+                      fuel::Int,
+                      amm::Int,
+                      steel::Int,
+                      baux::Int,
+                      shipId::ShipId} deriving (Show, Read)
+recipeForm :: Maybe Recipe -> Html -> MForm Handler (FormResult Recipe, Widget)
+recipeForm recipe = renderDivs $ Recipe
+             <$> areq intField "鎮守府Lv" (fmap hqLv recipe)
+             <*> areq (selectField shipList) "Secretary" (fmap secId recipe)
+             <*> areq intField "Secretary Lv" (fmap secLv recipe)
+             <*> areq intField "燃料" (fmap fuel recipe)
+             <*> areq intField "弾薬" (fmap amm recipe)
+             <*> areq intField "鋼材" (fmap steel recipe)
+             <*> areq intField "ボーキサイト" (fmap baux recipe)
              <*> areq (selectField shipList) "Ship" Nothing
   where
     shipList = do
@@ -54,13 +63,14 @@ recipeForm = renderDivs $ Recipe
           
 postRecipeR :: Handler Html
 postRecipeR = do
-  ((result, widget), enctype) <- runFormPost $ recipeForm
+  ((result, widget), enctype) <- runFormPost $ recipeForm Nothing
   case result of
-    FormSuccess (Recipe hqLv secId secLv fuel amm steel baux shipId) -> do
+    FormSuccess recipe -> do
       time <- liftIO getCurrentTime
-      res <- runDB $ insertBy $ Resource fuel amm steel baux
+      res <- runDB $ insertBy $ Resource (fuel recipe) (amm recipe) (steel recipe) (baux recipe)
       let resourceId = either entityKey id res
-      _ <- runDB $ insert $ Shipbuild (Key $ PersistInt64 1) shipId time secId secLv hqLv resourceId -- fixme
+      _ <- runDB $ insert $ Shipbuild (Key $ PersistInt64 1) (shipId recipe) time (secId recipe) (secLv recipe) (hqLv recipe) resourceId -- fixme
+      setSession (pack "recipe") (pack $ show recipe)
       return ()
     _ -> error "error"
   redirect RecipeR
