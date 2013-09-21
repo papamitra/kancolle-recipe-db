@@ -1,0 +1,10 @@
+
+Shipbuildview
+    secname String
+    shipname String
+    hqlv Int
+    posted UTCTime
+    fuel Int
+    amm Int
+    steel Int
+    baux Int
