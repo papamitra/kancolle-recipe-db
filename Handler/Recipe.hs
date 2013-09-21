@@ -19,7 +19,7 @@ getRecipeR = do
     [whamlet|
 <form method=post action=@{RecipeR} entype=#{enctype}>
     ^{widget}
-    <input type=submit value="submit">
+    <input type=submit class="btn btn-primary" value="submit">
 $if null recipes
   <p>レシピはありません
 $else
