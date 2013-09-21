@@ -1,6 +1,7 @@
 
 Shipbuildview
     secname String
+    seclv Int
     shipname String
     hqlv Int
     posted UTCTime
