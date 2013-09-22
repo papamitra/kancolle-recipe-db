@@ -48,15 +48,21 @@ data Recipe = Recipe {hqLv::Int,
                       baux::Int,
                       shipId::ShipId} deriving (Show, Read)
 recipeForm :: Maybe Recipe -> Html -> MForm Handler (FormResult Recipe, Widget)
-recipeForm recipe = renderDivs $ Recipe
-             <$> areq intField "司令Lv" (fmap hqLv recipe)
-             <*> areq (selectField shipList) "秘書艦" (fmap secId recipe)
-             <*> areq intField "秘書艦Lv" (fmap secLv recipe)
-             <*> areq intField "燃料" (fmap fuel recipe)
-             <*> areq intField "弾薬" (fmap amm recipe)
-             <*> areq intField "鋼材" (fmap steel recipe)
-             <*> areq intField "ボーキサイト" (fmap baux recipe)
-             <*> areq (selectField shipList) "建造1" Nothing
+recipeForm recipe extra = do
+             (vHqLv, fHqLv) <- mreq intField "司令Lv" (fmap hqLv recipe)
+             (vSecId, fSecId) <- mreq (selectField shipList) "秘書艦" (fmap secId recipe)
+             (vSecLv, fSecId) <- mreq intField "秘書艦Lv" (fmap secLv recipe)
+             (vFuel, fFuel) <- mreq intField "燃料" (fmap fuel recipe)
+             (vAmm, fAmm) <- mreq intField "弾薬" (fmap amm recipe)
+             (vSteel, fSteel) <- mreq intField "鋼材" (fmap steel recipe)
+             (vBaux, fBaux) <- mreq intField "ボーキサイト" (fmap baux recipe)
+             (vShipId, fShipId) <- mreq (selectField shipList) "建造1" Nothing
+             let inputValue = Recipe <$> vHqLv <*> vSecId <*> vSecLv <*> vFuel <*> vAmm <*> vSteel <*> vBaux <*> vShipId
+             let widget = do
+                   [whamlet|
+                    #{extra}                    
+                   |]
+             return (inputValue, widget)
   where
     shipList = do
       ships <- runDB $ selectList [] [Asc ShipId]
