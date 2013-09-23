@@ -60,7 +60,25 @@ recipeForm recipe extra = do
              let inputValue = Recipe <$> vHqLv <*> vSecId <*> vSecLv <*> vFuel <*> vAmm <*> vSteel <*> vBaux <*> vShipId
              let widget = do
                    [whamlet|
-                    #{extra}                    
+                    #{extra}
+                    <div .control-group>
+                      <label .control-label>#{fvLabel fHqLv}
+                      <div .controls>^{fvInput fHqLv}
+                    <div .row>
+                      <div .span3>
+                        <label .control-label>#{fvLabel fFuel}
+                        <div .controls>^{fvInput fFuel}
+
+                        <label .control-label>#{fvLabel fAmm}
+                        <div .controls>^{fvInput fAmm}
+
+                      <div .span3>
+                        <label .control-label>#{fvLabel fSteel}
+                        <div .controls>^{fvInput fSteel}
+
+                        <label .control-label>#{fvLabel fBaux}
+                        <div .controls>^{fvInput fBaux}
+
                    |]
              return (inputValue, widget)
   where
