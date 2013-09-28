@@ -11,6 +11,8 @@ import Text.Printf
 import Data.Maybe
 import Data.Traversable
 import Text.Read
+import qualified Control.Monad as M
+import Data.String(fromString)
 
 maybeRead = fmap fst . listToMaybe .reads
 
@@ -62,11 +64,8 @@ recipeForm recipe extra = do
              (vAmm, fAmm) <- mreq intField "弾薬" (fmap amm recipe)
              (vSteel, fSteel) <- mreq intField "鋼材" (fmap steel recipe)
              (vBaux, fBaux) <- mreq intField "ボーキサイト" (fmap baux recipe)
---             shipIds <- sequence [mopt (selectField shipList) s Nothing | i <- [1..6], let s = printf "建造%d" i :: FieldSettings App]
---             let inputValue = Recipe <$> vHqLv <*> vSecId <*> vSecLv <*> vFuel <*> vAmm <*> vSteel <*> vBaux <*> (sequence $ map fst shipIds)
-             (vShipId, fShipId) <- mopt (selectField shipList) "建造1" Nothing
-             (vShipId2, fShipId2) <- mopt (selectField shipList) "建造2" Nothing
-             let inputValue = Recipe <$> vHqLv <*> vSecId <*> vSecLv <*> vFuel <*> vAmm <*> vSteel <*> vBaux <*> (catMaybes <$> (sequenceA [vShipId, vShipId2]))
+             ships <- M.sequence [mopt (selectField shipList) (fromString s) Nothing | i <- [1..6], let s = printf "建造%s" (show i)] -- printf "%d" i だとうまくいかない.
+             let inputValue = Recipe <$> vHqLv <*> vSecId <*> vSecLv <*> vFuel <*> vAmm <*> vSteel <*> vBaux <*> (catMaybes <$> sequenceA (map fst ships))
 
              let widget = do
                    [whamlet|
@@ -94,7 +93,8 @@ recipeForm recipe extra = do
                       <div .controls>^{fvInput fSecId}
                         ^{fvInput fSecLv}
 
-                    ^{fvInput fShipId}
+                    $forall (_, fShipId) <- ships
+                      ^{fvInput fShipId}
                    |]
              return (inputValue, widget)
   where
