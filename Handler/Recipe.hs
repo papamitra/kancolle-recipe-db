@@ -7,12 +7,18 @@ import Import
 import Data.Text(pack, unpack)
 import Yesod.Form.Fields
 import Data.Time
-  
+import Text.Printf
+import Data.Maybe
+import Data.Traversable
+import Text.Read
+
+maybeRead = fmap fst . listToMaybe .reads
+
 getRecipeR :: Handler Html
 getRecipeR = do
   recipes <- runDB $ selectList [] [Desc ShipbuildviewPosted]
   sess <- (lookupSession (pack "recipe"))
-  let recipeSess = sess >>= (return . read . unpack) :: Maybe Recipe
+  let recipeSess = sess >>= (maybeRead . unpack) :: Maybe Recipe
   (widget, enctype) <- generateFormPost $ recipeForm recipeSess
   defaultLayout $ do
     setTitle "recipe"
@@ -46,18 +52,22 @@ data Recipe = Recipe {hqLv::Int,
                       amm::Int,
                       steel::Int,
                       baux::Int,
-                      shipId::ShipId} deriving (Show, Read)
+                      shipIds::[ShipId]} deriving (Show, Read)
 recipeForm :: Maybe Recipe -> Html -> MForm Handler (FormResult Recipe, Widget)
 recipeForm recipe extra = do
              (vHqLv, fHqLv) <- mreq intField "司令Lv" (fmap hqLv recipe)
              (vSecId, fSecId) <- mreq (selectField shipList) "秘書艦" (fmap secId recipe)
-             (vSecLv, fSecId) <- mreq intField "秘書艦Lv" (fmap secLv recipe)
+             (vSecLv, fSecLv) <- mreq intField "秘書艦Lv" (fmap secLv recipe)
              (vFuel, fFuel) <- mreq intField "燃料" (fmap fuel recipe)
              (vAmm, fAmm) <- mreq intField "弾薬" (fmap amm recipe)
              (vSteel, fSteel) <- mreq intField "鋼材" (fmap steel recipe)
              (vBaux, fBaux) <- mreq intField "ボーキサイト" (fmap baux recipe)
-             (vShipId, fShipId) <- mreq (selectField shipList) "建造1" Nothing
-             let inputValue = Recipe <$> vHqLv <*> vSecId <*> vSecLv <*> vFuel <*> vAmm <*> vSteel <*> vBaux <*> vShipId
+--             shipIds <- sequence [mopt (selectField shipList) s Nothing | i <- [1..6], let s = printf "建造%d" i :: FieldSettings App]
+--             let inputValue = Recipe <$> vHqLv <*> vSecId <*> vSecLv <*> vFuel <*> vAmm <*> vSteel <*> vBaux <*> (sequence $ map fst shipIds)
+             (vShipId, fShipId) <- mopt (selectField shipList) "建造1" Nothing
+             (vShipId2, fShipId2) <- mopt (selectField shipList) "建造2" Nothing
+             let inputValue = Recipe <$> vHqLv <*> vSecId <*> vSecLv <*> vFuel <*> vAmm <*> vSteel <*> vBaux <*> (catMaybes <$> (sequenceA [vShipId, vShipId2]))
+
              let widget = do
                    [whamlet|
                     #{extra}
@@ -79,6 +89,12 @@ recipeForm recipe extra = do
                         <label .control-label>#{fvLabel fBaux}
                         <div .controls>^{fvInput fBaux}
 
+                    <div .control-group>
+                      <label .control-label>#{fvLabel fSecId}(Lv)
+                      <div .controls>^{fvInput fSecId}
+                        ^{fvInput fSecLv}
+
+                    ^{fvInput fShipId}
                    |]
              return (inputValue, widget)
   where
@@ -94,8 +110,8 @@ postRecipeR = do
     FormSuccess recipe -> do
       time <- liftIO getCurrentTime
       res <- runDB $ insertBy $ Resource (fuel recipe) (amm recipe) (steel recipe) (baux recipe)
-      let resourceId = either entityKey id res
-      _ <- runDB $ insert $ Shipbuild (Key $ PersistInt64 1) (shipId recipe) time (secId recipe) (secLv recipe) (hqLv recipe) resourceId -- fixme
+      let resourceId = either entityKey id res          
+      _ <- runDB $ insert $ Shipbuild (Key $ PersistInt64 1) ((shipIds recipe) !! 1) time (secId recipe) (secLv recipe) (hqLv recipe) resourceId -- fixme
       setSession (pack "recipe") (pack $ show recipe)
       return ()
     _ -> error "error"
