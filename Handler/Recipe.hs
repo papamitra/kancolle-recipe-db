@@ -1,3 +1,4 @@
+-- -*- coding:utf-8 -*-
 {-# LANGUAGE OverloadedStrings #-}
 
 module Handler.Recipe where
@@ -47,6 +48,11 @@ $else
         <td>#{shipbuildviewSecname shipbuild}(#{shipbuildviewSeclv shipbuild})
 |]
 
+threesome :: [a] -> [[a]]
+threesome [] = []
+threesome xs = let (ys, rest) = splitAt 3 xs
+               in (ys : (threesome rest))
+                  
 data Recipe = Recipe {hqLv::Int,
                       secId::ShipId,
                       secLv::Int,
@@ -65,6 +71,7 @@ recipeForm recipe extra = do
              (vSteel, fSteel) <- mreq intField "鋼材" (fmap steel recipe)
              (vBaux, fBaux) <- mreq intField "ボーキサイト" (fmap baux recipe)
              ships <- M.sequence [mopt (selectField shipList) (fromString s) Nothing | i <- [1..6], let s = printf "建造%s" (show i)] -- printf "%d" i だとうまくいかない.
+             let ships3 = threesome ships
              let inputValue = Recipe <$> vHqLv <*> vSecId <*> vSecLv <*> vFuel <*> vAmm <*> vSteel <*> vBaux <*> (catMaybes <$> sequenceA (map fst ships))
 
              let widget = do
@@ -93,8 +100,11 @@ recipeForm recipe extra = do
                       <div .controls>^{fvInput fSecId}
                         ^{fvInput fSecLv}
 
-                    $forall (_, fShipId) <- ships
-                      ^{fvInput fShipId}
+                    <div .row>
+                      $forall ships <- ships3
+                        <div .span3>
+                          $forall (_, fShipId) <- ships
+                            <div .controls>^{fvInput fShipId}
                    |]
              return (inputValue, widget)
   where
