@@ -13,6 +13,7 @@ import Data.Maybe
 import Data.Traversable
 import Text.Read
 import qualified Control.Monad as M
+import Control.Monad(forM_)
 import Data.String(fromString)
 
 maybeRead = fmap fst . listToMaybe .reads
@@ -120,8 +121,9 @@ postRecipeR = do
     FormSuccess recipe -> do
       time <- liftIO getCurrentTime
       res <- runDB $ insertBy $ Resource (fuel recipe) (amm recipe) (steel recipe) (baux recipe)
-      let resourceId = either entityKey id res          
-      _ <- runDB $ insert $ Shipbuild (Key $ PersistInt64 1) ((shipIds recipe) !! 1) time (secId recipe) (secLv recipe) (hqLv recipe) resourceId -- fixme
+      let resourceId = either entityKey id res
+      forM_ (shipIds recipe) $ \shipId ->
+        runDB $ insert $ Shipbuild (Key $ PersistInt64 1) shipId time (secId recipe) (secLv recipe) (hqLv recipe) resourceId
       setSession (pack "recipe") (pack $ show recipe)
       return ()
     _ -> error "error"
