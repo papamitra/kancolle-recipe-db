@@ -16,6 +16,8 @@ import qualified Control.Monad as M
 import Control.Monad(forM_)
 import Data.String(fromString)
 
+import Text.Lucius
+
 maybeRead = fmap fst . listToMaybe .reads
 
 getRecipeR :: Handler Html
@@ -26,6 +28,12 @@ getRecipeR = do
   (widget, enctype) <- generateFormPost $ recipeForm recipeSess
   defaultLayout $ do
     setTitle "recipe"
+    toWidget [lucius|
+body{
+  padding-top:60px;
+}
+|]
+    $(widgetFile "navbar")
     [whamlet|
 <form method=post action=@{RecipeR} entype=#{enctype}>
     ^{widget}
