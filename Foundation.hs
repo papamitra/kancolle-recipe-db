@@ -19,6 +19,8 @@ import Model
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import System.Log.FastLogger (Logger)
+import Yesod.Auth.OAuth(authTwitter)
+import Data.Text.Encoding
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -95,7 +97,7 @@ instance Yesod App where
     urlRenderOverride _ _ = Nothing
 
     -- The page to be redirected to when authentication is required.
-    authRoute _ = Just $ AuthR LoginR
+    authRoute _ = Just LoginPanelR
 
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
@@ -142,7 +144,10 @@ instance YesodAuth App where
                 fmap Just $ insert $ User (credsIdent creds) Nothing
 
     -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [authBrowserId def, authGoogleEmail]
+    authPlugins _ = [authBrowserId def, authGoogleEmail,
+                     authTwitter
+                       (encodeUtf8 "your consumer key goes here")
+                       (encodeUtf8 "your consumer secret goes here")]
 
     authHttpManager = httpManager
 

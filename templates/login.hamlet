@@ -1,0 +1,4 @@
+<section>
+    <form method="get" action="@{AuthR twitterUrl}">
+        <button value="Login via Twitter">
+            Twitter
