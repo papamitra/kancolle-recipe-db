@@ -17,6 +17,7 @@ import Control.Monad(forM_)
 import Data.String(fromString)
 
 import Text.Lucius
+import Yesod.Auth
 
 maybeRead = fmap fst . listToMaybe .reads
 
@@ -26,13 +27,9 @@ getRecipeR = do
   sess <- (lookupSession (pack "recipe"))
   let recipeSess = sess >>= (maybeRead . unpack) :: Maybe Recipe
   (widget, enctype) <- generateFormPost $ recipeForm recipeSess
+  muser <- maybeAuth
   defaultLayout $ do
     setTitle "recipe"
-    toWidget [lucius|
-body{
-  padding-top:60px;
-}
-|]
     $(widgetFile "navbar")
     [whamlet|
 <form method=post action=@{RecipeR} entype=#{enctype}>

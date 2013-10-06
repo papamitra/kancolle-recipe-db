@@ -1,7 +1,12 @@
 
-<div .navbar .navbar-fixed-top>
+<div .navbar>
   <div .navbar-inner>
     <div .container>
       <ul .nav>
         <a .brand>艦これレシピDB
-        <li><a href="#">Hoge
+      <ul .nav .pull-right>
+        $maybe (Entity _ user) <- muser
+          <li><a href="#">#{userIdent user}
+        $nothing
+          <li><a href="#">ログイン
+
