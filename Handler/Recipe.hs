@@ -28,6 +28,7 @@ getRecipeR = do
   let recipeSess = sess >>= (maybeRead . unpack) :: Maybe Recipe
   (widget, enctype) <- generateFormPost $ recipeForm recipeSess
   muser <- maybeAuth
+  let recipeTable = $(widgetFile "recipeTable")
   defaultLayout $ do
     setTitle "recipe"
     $(widgetFile "navbar")
@@ -38,20 +39,7 @@ getRecipeR = do
 $if null recipes
   <p>レシピはありません
 $else
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">レシピ
-        <th scope="col">建造艦
-        <th scope="col">司令Lv
-        <th scope="col">秘書艦(Lv)
-    <tbody>
-    $forall Entity shipbuildviewId shipbuild <- recipes
-      <tr>
-        <td>#{show $ shipbuildviewFuel shipbuild}/#{show $ shipbuildviewAmm shipbuild}/#{show $ shipbuildviewSteel shipbuild}/#{show $ shipbuildviewBaux shipbuild}
-        <td>#{shipbuildviewShipname shipbuild}
-        <td>#{shipbuildviewHqlv shipbuild}
-        <td>#{shipbuildviewSecname shipbuild}(#{shipbuildviewSeclv shipbuild})
+  ^{recipeTable}
 |]
 
 threesome :: [a] -> [[a]]
