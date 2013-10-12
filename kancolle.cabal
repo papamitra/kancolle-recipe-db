@@ -19,6 +19,7 @@ library
                      Settings
                      Settings.StaticFiles
                      Settings.Development
+                     Handler.Util
                      Handler.Home
                      Handler.Recipe
                      Handler.LoginPanel
