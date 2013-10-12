@@ -9,3 +9,15 @@ Shipbuildview
     amm Int
     steel Int
     baux Int
+
+Developview
+    secname String
+    seclv Int
+    equipname String
+    equipclass String
+    hqlv Int
+    posted UTCTime
+    fuel Int
+    amm Int
+    steel Int
+    baux Int

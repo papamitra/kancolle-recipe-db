@@ -1,0 +1,17 @@
+  $if null recipes
+    <p>レシピはありません
+  $else
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">レシピ
+          <th scope="col">装備名
+          <th scope="col">司令Lv
+          <th scope="col">秘書艦
+        <tbody>
+          $forall Entity developviewId develop <- recipes
+            <tr>
+              <td>#{show $ developviewFuel develop}/#{show $ developviewAmm develop}/#{show $ developviewSteel develop}/#{show $ developviewBaux develop}
+              <td>#{developviewEquipname develop}
+              <td>#{developviewHqlv develop}
+              <td>#{developviewSecname develop} / Lv#{developviewSeclv develop}

@@ -36,9 +36,6 @@ getRecipeR = do
   <form method=post action=@{RecipeR} entype=#{enctype}>
     ^{widget}
     <input type=submit class="btn btn-primary" value="submit">
-  $if null recipes
-    <p>レシピはありません
-  $else
     ^{recipeTable}
 |]
 
