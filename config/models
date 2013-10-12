@@ -12,7 +12,11 @@ Ship
 Equipment
     libNo Int
     name String
+    type EquipmentClassId
     UniqueEquipmentName name
+
+EquipmentClass
+    name String
 
 Shipbuild
     userId UserId
