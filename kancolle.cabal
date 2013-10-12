@@ -22,6 +22,7 @@ library
                      Handler.Home
                      Handler.Recipe
                      Handler.LoginPanel
+                     Handler.Devel
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

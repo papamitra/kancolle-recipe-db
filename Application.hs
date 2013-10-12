@@ -24,6 +24,7 @@ import System.Log.FastLogger (mkLogger)
 import Handler.Home
 import Handler.Recipe
 import Handler.LoginPanel
+import Handler.Devel
 
 import Data.Conduit
 
