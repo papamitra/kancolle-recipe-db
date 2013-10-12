@@ -33,13 +33,13 @@ getRecipeR = do
     setTitle "recipe"
     $(widgetFile "navbar")
     [whamlet|
-<form method=post action=@{RecipeR} entype=#{enctype}>
+  <form method=post action=@{RecipeR} entype=#{enctype}>
     ^{widget}
     <input type=submit class="btn btn-primary" value="submit">
-$if null recipes
-  <p>レシピはありません
-$else
-  ^{recipeTable}
+  $if null recipes
+    <p>レシピはありません
+  $else
+    ^{recipeTable}
 |]
 
 threesome :: [a] -> [[a]]

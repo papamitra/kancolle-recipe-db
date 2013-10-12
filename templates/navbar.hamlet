@@ -6,7 +6,14 @@
         <a .brand>艦これレシピDB
       <ul .nav .pull-right>
         $maybe (Entity _ user) <- muser
-          <li><a href="#">#{userIdent user}
+          <li .dropdown>
+            <a href="#" .dropdown-toggle data-toggle="dropdown">
+              #{userIdent user}
+              <b .caret>
+            <ul .dropdown-menu>
+              <li>
+                <a href="#">Hoge
         $nothing
-          <li><a href="#">ログイン
+          <li>
+            <a href="#">ログイン
 
