@@ -26,8 +26,8 @@ getRecipeR :: Handler Html
 getRecipeR = do
   recipes <- runDB $ selectList [] [Desc ShipbuildviewPosted]
   sess <- (lookupSession (pack "recipe"))
-  let recipeSess = sess >>= (maybeRead . unpack) :: Maybe Recipe
-  (widget, enctype) <- generateFormPost $ recipeForm recipeSess
+  let recipeSess = sess >>= (maybeRead . unpack) :: Maybe (Recipe ShipId)
+  (widget, enctype) <- generateFormPost $ recipeForm recipeSess shipList
   muser <- maybeAuth
   let recipeTable = $(widgetFile "recipeTable")
   defaultLayout $ do
@@ -39,16 +39,16 @@ getRecipeR = do
     <input type=submit class="btn btn-primary" value="submit">
     ^{recipeTable}
 |]
-          
+
 postRecipeR :: Handler Html
 postRecipeR = do
-  ((result, widget), enctype) <- runFormPost $ recipeForm Nothing
+  ((result, widget), enctype) <- runFormPost $ recipeForm Nothing shipList
   case result of
     FormSuccess recipe -> do
       time <- liftIO getCurrentTime
       res <- runDB $ insertBy $ Resource (fuel recipe) (amm recipe) (steel recipe) (baux recipe)
       let resourceId = either entityKey id res
-      forM_ (shipIds recipe) $ \shipId ->
+      forM_ (createdIds recipe) $ \shipId ->
         runDB $ insert $ Shipbuild (Key $ PersistInt64 1) shipId time (secId recipe) (secLv recipe) (hqLv recipe) resourceId
       setSession (pack "recipe") (pack $ show recipe)
       return ()

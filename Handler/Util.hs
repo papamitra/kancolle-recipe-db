@@ -15,18 +15,23 @@ threesome :: [a] -> [[a]]
 threesome [] = []
 threesome xs = let (ys, rest) = splitAt 3 xs
                in (ys : (threesome rest))
-                  
-data Recipe = Recipe {hqLv::Int,
+
+shipList = do
+  ships <- runDB $ selectList [] [Asc ShipId]
+  optionsPairs [(pack $ shipName ship, shipid)| Entity shipid ship <- ships]
+
+-- 建造 or 開発のレシピ
+data Recipe s = Recipe {hqLv::Int,
                       secId::ShipId,
                       secLv::Int,
                       fuel::Int,
                       amm::Int,
                       steel::Int,
                       baux::Int,
-                      shipIds::[ShipId]} deriving (Show, Read)
+                      createdIds::[s]} deriving (Show, Read)
 
-recipeForm :: Maybe Recipe -> Html -> MForm Handler (FormResult Recipe, Widget)
-recipeForm recipe extra = do
+recipeForm :: (PersistEntity m) => Maybe (Recipe (Key m)) -> Handler (OptionList (Key m)) -> Html -> MForm Handler (FormResult (Recipe (Key Ship)), Widget)
+recipeForm recipe createds extra = do
              (vHqLv, fHqLv) <- mreq intField "司令Lv" (fmap hqLv recipe)
              (vSecId, fSecId) <- mreq (selectField shipList) "秘書艦" (fmap secId recipe)
              (vSecLv, fSecLv) <- mreq intField "秘書艦Lv" (fmap secLv recipe)
@@ -34,9 +39,9 @@ recipeForm recipe extra = do
              (vAmm, fAmm) <- mreq intField "弾薬" (fmap amm recipe)
              (vSteel, fSteel) <- mreq intField "鋼材" (fmap steel recipe)
              (vBaux, fBaux) <- mreq intField "ボーキサイト" (fmap baux recipe)
-             ships <- M.sequence [mopt (selectField shipList) (fromString s) Nothing | i <- [1..6], let s = printf "建造%s" (show i)] -- printf "%d" i だとうまくいかない.
-             let ships3 = threesome ships
-             let inputValue = Recipe <$> vHqLv <*> vSecId <*> vSecLv <*> vFuel <*> vAmm <*> vSteel <*> vBaux <*> (catMaybes <$> sequenceA (map fst ships))
+             cs <- M.sequence [mopt (selectField shipList) (fromString s) Nothing | i <- [1..6], let s = printf "建造%s" (show i)] -- printf "%d" i だとうまくいかない.
+             let cs3 = threesome cs
+             let inputValue = Recipe <$> vHqLv <*> vSecId <*> vSecLv <*> vFuel <*> vAmm <*> vSteel <*> vBaux <*> (catMaybes <$> sequenceA (map fst cs))
 
              let widget = do
                    [whamlet|
@@ -65,13 +70,9 @@ recipeForm recipe extra = do
                         ^{fvInput fSecLv}
 
                     <div .row>
-                      $forall ships <- ships3
+                      $forall cs <- cs3
                         <div .span3>
-                          $forall (_, fShipId) <- ships
-                            <div .controls>^{fvInput fShipId}
+                          $forall (_, fCreatedId) <- cs
+                            <div .controls>^{fvInput fCreatedId}
                    |]
              return (inputValue, widget)
-  where
-    shipList = do
-      ships <- runDB $ selectList [] [Asc ShipId]
-      optionsPairs [(pack $ shipName ship, shipid)| Entity shipid ship <- ships]
