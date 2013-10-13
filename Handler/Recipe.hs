@@ -29,7 +29,6 @@ getRecipeR = do
   let recipeSess = sess >>= (maybeRead . unpack) :: Maybe (Recipe ShipId)
   (widget, enctype) <- generateFormPost $ recipeForm recipeSess shipList
   muser <- maybeAuth
-  let recipeTable = $(widgetFile "recipeTable")
   defaultLayout $ do
     setTitle "recipe"
     $(widgetFile "navbar")
@@ -37,8 +36,8 @@ getRecipeR = do
   <form method=post action=@{RecipeR} entype=#{enctype}>
     ^{widget}
     <input type=submit class="btn btn-primary" value="submit">
-    ^{recipeTable}
 |]
+    $(widgetFile "recipeTable")
 
 postRecipeR :: Handler Html
 postRecipeR = do
