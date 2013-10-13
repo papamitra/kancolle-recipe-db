@@ -30,7 +30,7 @@ data Recipe s = Recipe {hqLv::Int,
                       baux::Int,
                       createdIds::[s]} deriving (Show, Read)
 
-recipeForm :: (PersistEntity m) => Maybe (Recipe (Key m)) -> Handler (OptionList (Key m)) -> Html -> MForm Handler (FormResult (Recipe (Key Ship)), Widget)
+recipeForm :: (PersistEntity m) => Maybe (Recipe (Key m)) -> Handler (OptionList (Key m)) -> Html -> MForm Handler (FormResult (Recipe (Key m)), Widget)
 recipeForm recipe createds extra = do
              (vHqLv, fHqLv) <- mreq intField "司令Lv" (fmap hqLv recipe)
              (vSecId, fSecId) <- mreq (selectField shipList) "秘書艦" (fmap secId recipe)
@@ -39,7 +39,7 @@ recipeForm recipe createds extra = do
              (vAmm, fAmm) <- mreq intField "弾薬" (fmap amm recipe)
              (vSteel, fSteel) <- mreq intField "鋼材" (fmap steel recipe)
              (vBaux, fBaux) <- mreq intField "ボーキサイト" (fmap baux recipe)
-             cs <- M.sequence [mopt (selectField shipList) (fromString s) Nothing | i <- [1..6], let s = printf "建造%s" (show i)] -- printf "%d" i だとうまくいかない.
+             cs <- M.sequence [mopt (selectField createds) (fromString s) Nothing | i <- [1..6], let s = printf "%s" (show i)] -- printf "%d" i だとうまくいかない.
              let cs3 = threesome cs
              let inputValue = Recipe <$> vHqLv <*> vSecId <*> vSecLv <*> vFuel <*> vAmm <*> vSteel <*> vBaux <*> (catMaybes <$> sequenceA (map fst cs))
 
