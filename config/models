@@ -17,6 +17,7 @@ Equipment
 
 EquipmentClass
     name String
+    UniqueEquipmentClassName name
 
 Shipbuild
     userId UserId
