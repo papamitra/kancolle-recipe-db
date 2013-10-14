@@ -45,6 +45,7 @@ recipeForm recipe createds extra = do
 
              let widget = do
                    [whamlet|
+                    #{extra}
                     <div .control-group>
                       <label .control-label>#{fvLabel fHqLv}
                       <div .controls>^{fvInput fHqLv}
