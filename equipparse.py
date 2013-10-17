@@ -32,6 +32,10 @@ max_no = 1
 equipcsv = {}
 max_equipno = 0
 
+#ペンギンは最初に出力しとこ
+print "insert or ignore into 'equipment_class' (name) values ('その他');"
+print "insert or ignore into 'equipment' (lib_no, name, type) select -1, 'ペンギン', equipment_class.id from equipment_class where equipment_class.name == 'その他';"
+
 try:
     with open("equips.csv", "r") as f:
         for line in f.readlines():
