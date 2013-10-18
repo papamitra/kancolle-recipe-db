@@ -87,6 +87,8 @@ instance Yesod App where
                 [ css_normalize_css
                 , css_bootstrap_css
                 ])
+            $(combineScripts 'StaticR
+              [ js_bootstrap_js])
             $(widgetFile "default-layout")
         hamletToRepHtml $(hamletFile "templates/default-layout-wrapper.hamlet")
 
