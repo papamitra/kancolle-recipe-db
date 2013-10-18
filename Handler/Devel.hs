@@ -10,6 +10,8 @@ import Yesod.Form.Fields
 
 import Handler.Util
 
+import Yesod.Auth.OAuth(twitterUrl)
+
 equipList :: Handler (OptionList EquipmentId)
 equipList = do
   equipments <- runDB $ selectList [] [Asc EquipmentId]
@@ -24,6 +26,8 @@ getDevelR = do
     setTitle "開発"
     $(widgetFile "navbar")
     [whamlet|
+  <div .page-header>
+    <h2>開発
   <form method=post action=@{DevelR} entype=#{enctype}>
     ^{widget}
     <input type=submit class="btn btn-primary" value="submit">

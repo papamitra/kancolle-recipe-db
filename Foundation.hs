@@ -87,6 +87,7 @@ instance Yesod App where
                 [ css_normalize_css
                 , css_bootstrap_css
                 ])
+            addScriptRemote "https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"
             $(combineScripts 'StaticR
               [ js_bootstrap_js])
             $(widgetFile "default-layout")

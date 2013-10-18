@@ -20,6 +20,8 @@ import Yesod.Auth
 
 import Handler.Util
 
+import Yesod.Auth.OAuth(twitterUrl)
+
 maybeRead = fmap fst . listToMaybe .reads
 
 getRecipeR :: Handler Html
@@ -33,6 +35,8 @@ getRecipeR = do
     setTitle "recipe"
     $(widgetFile "navbar")
     [whamlet|
+  <div .page-header>
+    <h2>開発
   <form method=post action=@{RecipeR} entype=#{enctype}>
     ^{widget}
     <input type=submit class="btn btn-primary" value="submit">
