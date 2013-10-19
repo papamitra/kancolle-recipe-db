@@ -1,4 +1,6 @@
 {-*- coding: utf-8 -*-}
+{-# LANGUAGE BangPatterns #-}
+
 module Handler.Devel where
 
 import Import
@@ -21,7 +23,8 @@ getDevelR :: Handler Html
 getDevelR = do
   recipes <- runDB $ selectList [] [Desc DevelopviewPosted]
   muser <- maybeAuth
-  (widget, enctype) <- generateFormPost $ recipeForm Nothing equipList
+  !elist <- equipList
+  (widget, enctype) <- generateFormPost $ recipeForm Nothing elist
   defaultLayout $ do
     setTitle "開発"
     $(widgetFile "navbar")
@@ -36,8 +39,10 @@ getDevelR = do
 
 postDevelR :: Handler Html
 postDevelR = do
-  ((result, widget), enctype) <- runFormPost $ recipeForm Nothing equipList
+  !elist <- equipList
+  ((result, widget), enctype) <- runFormPost $ recipeForm Nothing elist
   muser <- maybeAuth
+  
   let userid = case muser of
         Just (Entity userId _) -> userId
         Nothing -> Key (PersistInt64 1)

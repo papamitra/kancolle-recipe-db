@@ -1,5 +1,5 @@
 -- -*- coding:utf-8 -*-
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, BangPatterns #-}
 
 module Handler.Recipe where
 
@@ -29,7 +29,8 @@ getRecipeR = do
   recipes <- runDB $ selectList [] [Desc ShipbuildviewPosted]
   sess <- (lookupSession (pack "recipe"))
   let recipeSess = sess >>= (maybeRead . unpack) :: Maybe (Recipe ShipId)
-  (widget, enctype) <- generateFormPost $ recipeForm recipeSess shipList
+  !shiplist <- shipList
+  (widget, enctype) <- generateFormPost $ recipeForm recipeSess shiplist
   muser <- maybeAuth
   defaultLayout $ do
     setTitle "recipe"
@@ -45,7 +46,8 @@ getRecipeR = do
 
 postRecipeR :: Handler Html
 postRecipeR = do
-  ((result, widget), enctype) <- runFormPost $ recipeForm Nothing shipList
+  !shiplist <- shipList
+  ((result, widget), enctype) <- runFormPost $ recipeForm Nothing shiplist
   case result of
     FormSuccess recipe -> do
       time <- liftIO getCurrentTime
