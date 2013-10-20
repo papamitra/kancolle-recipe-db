@@ -17,7 +17,7 @@
                 <b .caret>
               <ul .dropdown-menu>
                 <li>
-                  <a href="#">Hoge
+                  <a href="@{AuthR LogoutR}">ログアウト
           $nothing
             <li>
               <a href="@{AuthR twitterUrl}">ログイン

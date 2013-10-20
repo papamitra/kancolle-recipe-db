@@ -25,6 +25,7 @@ getDevelR = do
   muser <- maybeAuth
   !elist <- equipList
   (widget, enctype) <- generateFormPost $ recipeForm Nothing elist
+  setUltDest DevelR -- ログイン後このページに戻ってくるための設定
   defaultLayout $ do
     setTitle "開発"
     $(widgetFile "navbar")

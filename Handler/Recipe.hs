@@ -32,12 +32,13 @@ getRecipeR = do
   !shiplist <- shipList
   (widget, enctype) <- generateFormPost $ recipeForm recipeSess shiplist
   muser <- maybeAuth
+  setUltDest RecipeR -- ログイン後このページに戻ってくるための設定
   defaultLayout $ do
     setTitle "recipe"
     $(widgetFile "navbar")
     [whamlet|
   <div .page-header>
-    <h2>開発
+    <h2>建造
   <form method=post action=@{RecipeR} entype=#{enctype}>
     ^{widget}
     <input type=submit class="btn btn-primary" value="submit">

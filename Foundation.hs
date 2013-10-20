@@ -135,9 +135,9 @@ instance YesodAuth App where
     type AuthId App = UserId
 
     -- Where to send a user after successful login
-    loginDest _ = HomeR
+    loginDest _ = RecipeR
     -- Where to send a user after logout
-    logoutDest _ = HomeR
+    logoutDest _ = RecipeR
 
     getAuthId creds = runDB $ do
         x <- getBy $ UniqueUser $ credsIdent creds
@@ -154,6 +154,9 @@ instance YesodAuth App where
 
     authHttpManager = httpManager
 
+    -- これを有効にするとログアウトはいいがログインでサーバエラーになる
+--    redirectToReferer _ = True
+    
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
 instance RenderMessage App FormMessage where
