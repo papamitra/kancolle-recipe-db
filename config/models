@@ -7,7 +7,13 @@ User
 Ship
     libNo Int
     name String
+    type ShipTypesId
+    buildable Bool
     UniqueShipName name
+
+ShipTypes
+    name String
+    UniqueShipTypName name
 
 Equipment
     libNo Int
