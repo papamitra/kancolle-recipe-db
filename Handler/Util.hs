@@ -36,7 +36,7 @@ resourceFormSettings label = FieldSettings (fromString label) Nothing Nothing No
 
 recipeForm :: (PersistEntity m) => Maybe (Recipe (Key m)) -> (OptionList (Key m)) -> Html -> MForm Handler (FormResult (Recipe (Key m)), Widget)
 recipeForm recipe createds extra = do
-             (vHqLv, fHqLv) <- mreq intField "司令Lv" (fmap hqLv recipe)
+             (vHqLv, fHqLv) <- mreq intField (FieldSettings (fromString "司令Lv") Nothing Nothing Nothing [("class", "span1")]) (fmap hqLv recipe)
              (vSecId, fSecId) <- mreq (selectField shipList) (FieldSettings (fromString "秘書艦") Nothing Nothing Nothing [("class", "span2")]) (fmap secId recipe)
              (vSecLv, fSecLv) <- mreq intField (FieldSettings (fromString "秘書艦Lv") Nothing Nothing Nothing [("class", "span1")]) (fmap secLv recipe)
              (vFuel, fFuel) <- mreq intField (resourceFormSettings "燃料") (fmap fuel recipe)
@@ -50,39 +50,40 @@ recipeForm recipe createds extra = do
              let widget = do
                    [whamlet|
                     #{extra}
-                    <div .control-group>
-                      <label .control-label>#{fvLabel fHqLv}
-                      <div .controls>^{fvInput fHqLv}
                     <div .row>
-                      <div .span2>
-                        <div .controls>
-                          <div .input-prepend>
-                            <span .add-on>燃</span>^{fvInput fFuel}
-
-                        <div .controls>
-                          <div .input-prepend>
-                            <span .add-on>弾</span>^{fvInput fAmm}
-
-                      <div .span2>
-                        <div .controls>
-                          <div .input-prepend>
-                            <span .add-on>鋼</span>^{fvInput fSteel}
-
-                        <div .controls>
-                          <div .input-prepend>
-                            <span .add-on>ボ</span>^{fvInput fBaux}
+                      <div .span1>
+                        <div .control-group>
+                          <label .control-label>#{fvLabel fHqLv}
+                          <div .controls>^{fvInput fHqLv}
+                          
+                      <div .span4>
+                        <div .control-group>
+                          <label .control-label>#{fvLabel fSecId}
+                          <div .controls>
+                            ^{fvInput fSecId}
+                            <div .input-prepend>
+                              <span .add-on>Lv</span>^{fvInput fSecLv}
 
                     <div .control-group>
-                      <label .control-label>#{fvLabel fSecId}
-                      <div .controls>
-                        ^{fvInput fSecId}
+                      <label .control-label>資源
+                      <div .controls .form-inline>
                         <div .input-prepend>
-                          <<span .add-on>Lv</span>^{fvInput fSecLv}
+                          <span .add-on>燃</span>^{fvInput fFuel}
 
-                    <div .row>
-                      $forall cs <- cs3
-                        <div .span3>
-                          $forall (_, fCreatedId) <- cs
-                            <div .controls>^{fvInput fCreatedId}
+                        <div .input-prepend>
+                          <span .add-on>弾</span>^{fvInput fAmm}
+
+                        <div .input-prepend>
+                          <span .add-on>鋼</span>^{fvInput fSteel}
+
+                        <div .input-prepend>
+                          <span .add-on>ボ</span>^{fvInput fBaux}
+
+                    <div .control-group>
+                      <div .row>
+                        $forall cs <- cs3
+                          <div .span3>
+                            $forall (_, fCreatedId) <- cs
+                              <div .controls>^{fvInput fCreatedId}
                    |]
              return (inputValue, widget)
