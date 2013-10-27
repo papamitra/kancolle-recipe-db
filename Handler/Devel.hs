@@ -29,14 +29,22 @@ getDevelR = do
   defaultLayout $ do
     setTitle "開発"
     $(widgetFile "navbar")
+    let table = $(widgetFile "develTable")
     [whamlet|
   <div .page-header>
     <h2>開発
-  <form method=post action=@{DevelR} entype=#{enctype}>
-    ^{widget}
-    <input type=submit class="btn btn-primary" value="submit">
+  <div .row>
+    <div .span6>
+      ^{table}
+    <div .span6>
+      <div .well>
+        <h3>開発入力
+        <form method=post action=@{DevelR} entype=#{enctype}>
+          ^{widget}
+  
+           <input type=submit class="btn btn-primary" value="submit">
 |]
-    $(widgetFile "develTable")
+
 
 postDevelR :: Handler Html
 postDevelR = do

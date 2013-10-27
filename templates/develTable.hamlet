@@ -1,7 +1,7 @@
   $if null recipes
     <p>レシピはありません
   $else
-    <table class="table">
+    <table .table .table-condensed>
       <thead>
         <tr>
           <th scope="col">レシピ

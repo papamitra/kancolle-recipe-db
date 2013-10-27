@@ -35,15 +35,22 @@ getRecipeR = do
   setUltDest RecipeR -- ログイン後このページに戻ってくるための設定
   defaultLayout $ do
     setTitle "recipe"
+    let table = $(widgetFile "recipeTable")
     $(widgetFile "navbar")
     [whamlet|
   <div .page-header>
     <h2>建造
-  <form method=post action=@{RecipeR} entype=#{enctype}>
-    ^{widget}
-    <input type=submit class="btn btn-primary" value="submit">
+  <div .row>
+    <div .span6>
+      ^{table}
+    <div .span6>
+      <div .well>
+        <h3>建造入力
+        <form method=post action=@{RecipeR} entype=#{enctype}>
+          ^{widget}
+          <input type=submit class="btn btn-primary" value="submit">
 |]
-    $(widgetFile "recipeTable")
+
 
 postRecipeR :: Handler Html
 postRecipeR = do
