@@ -21,3 +21,8 @@ Developview
     amm Int
     steel Int
     baux Int
+
+Developrecipeview
+    equipcount Int
+    equipname String
+    resourceid ResourceId
