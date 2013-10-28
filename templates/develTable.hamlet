@@ -11,7 +11,7 @@
         <tbody>
           $forall Entity developviewId develop <- recipes
             <tr>
-              <td>#{show $ developviewFuel develop}/#{show $ developviewAmm develop}/#{show $ developviewSteel develop}/#{show $ developviewBaux develop}
+              <td><a href=@{DevelRecipeR (developviewFuel develop) (developviewAmm develop) (developviewSteel develop) (developviewBaux develop)}>#{show $ developviewFuel develop}/#{show $ developviewAmm develop}/#{show $ developviewSteel develop}/#{show $ developviewBaux develop}<a/>
               <td>#{developviewEquipname develop}
               <td>#{developviewHqlv develop}
               <td>#{developviewSecname develop} / Lv#{developviewSeclv develop}
