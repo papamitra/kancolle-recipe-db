@@ -2,9 +2,6 @@ module Handler.DevelRecipe where
 
 import Import
 
-import Yesod.Auth
-import Yesod.Auth.OAuth(twitterUrl)
-
 getDevelRecipeR :: Int -> Int -> Int -> Int -> Handler Html
 getDevelRecipeR fuel amm steel baux = do
   Entity resourceId _ <- runDB $ getBy404 $ UniqueResource fuel amm steel baux

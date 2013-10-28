@@ -16,11 +16,8 @@ import qualified Control.Monad as M
 import Control.Monad(forM_)
 
 import Text.Lucius
-import Yesod.Auth
 
 import Handler.Util
-
-import Yesod.Auth.OAuth(twitterUrl)
 
 maybeRead = fmap fst . listToMaybe .reads
 

@@ -7,12 +7,9 @@ import Import
 import Data.Text(pack)
 import Data.Time
 import Control.Monad(forM_)
-import Yesod.Auth
 import Yesod.Form.Fields
 
 import Handler.Util
-
-import Yesod.Auth.OAuth(twitterUrl)
 
 equipList :: Handler (OptionList EquipmentId)
 equipList = do
