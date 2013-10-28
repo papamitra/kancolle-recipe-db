@@ -25,6 +25,7 @@ import Handler.Home
 import Handler.Recipe
 import Handler.LoginPanel
 import Handler.Devel
+import Handler.DevelRecipe
 
 import Data.Conduit
 
