@@ -12,6 +12,8 @@ import Text.Printf
 import Data.String(fromString)
 import Control.Monad(forM)
 
+maybeRead = fmap fst . listToMaybe .reads
+
 threesome :: [a] -> [[a]]
 threesome [] = []
 threesome xs = let (ys, rest) = splitAt 3 xs

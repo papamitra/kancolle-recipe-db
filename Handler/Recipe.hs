@@ -19,8 +19,6 @@ import Text.Lucius
 
 import Handler.Util
 
-maybeRead = fmap fst . listToMaybe .reads
-
 getRecipeR :: Handler Html
 getRecipeR = do
   recipes <- runDB $ selectList [] [Desc ShipbuildviewPosted]

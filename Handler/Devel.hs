@@ -4,7 +4,7 @@
 module Handler.Devel where
 
 import Import
-import Data.Text(pack)
+import Data.Text(pack,unpack)
 import Data.Time
 import Control.Monad(forM_)
 import Yesod.Form.Fields
@@ -19,9 +19,11 @@ equipList = do
 getDevelR :: Handler Html
 getDevelR = do
   recipes <- runDB $ selectList [] [Desc DevelopviewPosted]
+  sess <- (lookupSession (pack "devel"))
+  let recipeSess = sess >>= (maybeRead . unpack) :: Maybe (Recipe EquipmentId)
   muser <- maybeAuth
   !elist <- equipList
-  (widget, enctype) <- generateFormPost $ recipeForm Nothing elist
+  (widget, enctype) <- generateFormPost $ recipeForm recipeSess elist
   setUltDest DevelR -- ログイン後このページに戻ってくるための設定
   defaultLayout $ do
     setTitle "開発"
