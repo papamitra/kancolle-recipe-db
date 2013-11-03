@@ -26,7 +26,7 @@ getDevelR = do
   (widget, enctype) <- generateFormPost $ recipeForm recipeSess elist
   setUltDest DevelR -- ログイン後このページに戻ってくるための設定
   defaultLayout $ do
-    setTitle "開発"
+    setTitle "開発 / 艦これレシピDB"
     $(widgetFile "navbar")
     let table = $(widgetFile "develTable")
     [whamlet|
@@ -37,6 +37,10 @@ getDevelR = do
       ^{table}
     <div .span6>
       <div .well>
+        $maybe _ <- muser
+        $nothing
+          <div .alert .alert-info>
+            現在未ログインです.
         <h3>開発入力
         <form method=post action=@{DevelR} entype=#{enctype}>
           ^{widget}

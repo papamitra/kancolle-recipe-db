@@ -29,7 +29,7 @@ getRecipeR = do
   muser <- maybeAuth
   setUltDest RecipeR -- ログイン後このページに戻ってくるための設定
   defaultLayout $ do
-    setTitle "recipe"
+    setTitle "建造 / 艦これレシピDB"
     let table = $(widgetFile "recipeTable")
     $(widgetFile "navbar")
     [whamlet|
@@ -40,6 +40,10 @@ getRecipeR = do
       ^{table}
     <div .span6>
       <div .well>
+        $maybe _ <- muser
+        $nothing
+          <div .alert .alert-info>
+            現在未ログインです.
         <h3>建造入力
         <form method=post action=@{RecipeR} entype=#{enctype}>
           ^{widget}

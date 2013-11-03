@@ -2,7 +2,7 @@
 <div .navbar>
   <div .navbar-inner>
     <div .container-fluid>
-      <a href=@{HomeR} .brand>艦これレシピDB
+      <a href=@{HomeR} .brand>艦これレシピDB(試運転中)
       <div .nav-collapse .collapse>
         <ul .nav>
           <li .divider-vertical>
