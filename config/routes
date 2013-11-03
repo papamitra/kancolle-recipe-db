@@ -9,3 +9,4 @@
 /login LoginPanelR GET
 /devel DevelR GET POST
 /develrecipe/#Int/#Int/#Int/#Int DevelRecipeR GET
+/equipment/#EquipmentId EquipmentR GET
