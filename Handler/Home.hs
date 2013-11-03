@@ -14,5 +14,6 @@ getHomeR :: Handler Html
 getHomeR = do
   muser <- maybeAuth
   defaultLayout $ do
+    setTitle "艦これレシピDB（試運転中）"
     $(widgetFile "navbar")
     $(widgetFile "homepage")
