@@ -26,3 +26,14 @@ Developrecipeview
     equipcount Int
     equipname String
     resourceid ResourceId
+
+Equipmentview
+    equipid EquipmentId
+    name String
+    fuel Int
+    amm Int
+    steel Int
+    baux Int
+    count Int
+    total Int
+

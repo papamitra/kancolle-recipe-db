@@ -21,6 +21,7 @@ import Text.Hamlet (hamletFile)
 import System.Log.FastLogger (Logger)
 import Yesod.Auth.OAuth(authTwitter)
 import Data.Text.Encoding
+import Data.Text
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application

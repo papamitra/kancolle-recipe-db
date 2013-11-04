@@ -12,6 +12,6 @@
           $forall Entity developviewId develop <- recipes
             <tr>
               <td><a href=@{DevelRecipeR (developviewFuel develop) (developviewAmm develop) (developviewSteel develop) (developviewBaux develop)}>#{show $ developviewFuel develop}/#{show $ developviewAmm develop}/#{show $ developviewSteel develop}/#{show $ developviewBaux develop}<a/>
-              <td>#{developviewEquipname develop}
+              <td><a href=@{EquipmentR $ pack $ (developviewEquipname develop)}>#{developviewEquipname develop}</a>
               <td>#{developviewHqlv develop}
               <td>#{developviewSecname develop} / Lv#{developviewSeclv develop}
