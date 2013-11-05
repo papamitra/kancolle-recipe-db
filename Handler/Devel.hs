@@ -16,6 +16,27 @@ equipList = do
   equipments <- runDB $ selectList [] [Asc EquipmentId]
   optionsPairs [(pack $ equipmentName equipment, equipid)| Entity equipid equipment <- equipments]
 
+equipClassTree :: Widget
+equipClassTree = do
+    equipclasses <- handlerToWidget $ runDB $ selectList [] [Asc EquipmentClassId]
+    [whamlet|
+    $forall (Entity classid equipClass) <- equipclasses
+      <ul>
+        <li>#{equipmentClassName equipClass}
+          ^{equipTree classid}
+   |]
+
+
+equipTree :: EquipmentClassId -> Widget
+equipTree classid = do
+  equips <- handlerToWidget $ runDB $ selectList [EquipmentType ==. classid] [Asc EquipmentId]
+  [whamlet|
+   <ul>
+     $forall (Entity equipid equip) <- equips
+       <li>#{equipmentName equip}
+  |]
+
+
 getDevelR :: Handler Html
 getDevelR = do
   recipes <- runDB $ selectList [] [Desc DevelopviewPosted]
@@ -35,6 +56,7 @@ getDevelR = do
   <div .row>
     <div .span6>
       ^{table}
+      ^{equipClassTree}
     <div .span6>
       <div .well>
         $maybe _ <- muser
