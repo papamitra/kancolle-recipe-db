@@ -33,13 +33,13 @@ equipTree classid = do
   [whamlet|
    <ul>
      $forall (Entity equipid equip) <- equips
-       <li>#{equipmentName equip}
+       <li><a href=@{EquipmentR $ pack $ equipmentName equip}>#{equipmentName equip}</a>
   |]
 
 
 getDevelR :: Handler Html
 getDevelR = do
-  recipes <- runDB $ selectList [] [Desc DevelopviewPosted]
+  recipes <- runDB $ selectList [] [LimitTo 10, Desc DevelopviewPosted]
   sess <- (lookupSession (pack "devel"))
   let recipeSess = sess >>= (maybeRead . unpack) :: Maybe (Recipe EquipmentId)
   muser <- maybeAuth
