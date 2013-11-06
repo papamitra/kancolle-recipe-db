@@ -19,10 +19,18 @@ equipList = do
 equipClassTree :: Widget
 equipClassTree = do
     equipclasses <- handlerToWidget $ runDB $ selectList [] [Asc EquipmentClassId]
+    toWidget [julius|
+      $(document).ready(function (){
+        $('label.tree-toggler').click(function (){
+          $(this).parent().children('ul.tree').toggle(300);
+        });
+        $('label.tree-toggler').parent().children('ul.tree').toggle(300);
+      });
+    |]
     [whamlet|
     $forall (Entity classid equipClass) <- equipclasses
-      <ul>
-        <li>#{equipmentClassName equipClass}
+      <ul .nav .nav-list .tree>
+        <li><label class="tree-toggler nav-header">#{equipmentClassName equipClass}</label>
           ^{equipTree classid}
    |]
 
@@ -31,9 +39,10 @@ equipTree :: EquipmentClassId -> Widget
 equipTree classid = do
   equips <- handlerToWidget $ runDB $ selectList [EquipmentType ==. classid] [Asc EquipmentId]
   [whamlet|
-   <ul>
+   <ul .nav .nav-list .tree>
      $forall (Entity equipid equip) <- equips
-       <li><a href=@{EquipmentR $ pack $ equipmentName equip}>#{equipmentName equip}</a>
+       <li>
+         <a href=@{EquipmentR $ pack $ equipmentName equip}>#{equipmentName equip}
   |]
 
 
