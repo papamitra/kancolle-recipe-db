@@ -1,24 +1,26 @@
 <!-- -*- coding: utf-8 -*- -->
-<div .navbar>
-  <div .navbar-inner>
-    <div .container-fluid>
-      <a href=@{HomeR} .brand>艦これレシピDB(試運転中)
-      <div .nav-collapse .collapse>
-        <ul .nav>
-          <li .divider-vertical>
-          <li><a href=@{DevelR}>開発</a>
-          <li .divider-vertical>
-          <li><a href=@{RecipeR}>建造</a>
-        <ul .nav .pull-right>
-          $maybe (Entity _ user) <- muser
-            <li .dropdown>
-              <a href="#" .dropdown-toggle data-toggle="dropdown">
-                #{userIdent user}
-                <b .caret>
-              <ul .dropdown-menu>
-                <li>
-                  <a href="@{AuthR LogoutR}">ログアウト
-          $nothing
+<nav .navbar .navbar-default role="navigation">
+  <div .navbar-header>
+    <button type="button" .navbar-toggle data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+      <span .sr-only>Toggle navigation
+      <span .icon-bar>
+      <span .icon-bar>
+      <span .icon-bar>
+    <a href=@{HomeR} .navbar-brand>艦これレシピDB(試運転中)
+  <div .navbar-collapse .collapse id="bs-example-navbar-collapse-1">
+    <ul .nav .navbar-nav>
+      <li><a href=@{DevelR}>開発</a>
+      <li><a href=@{RecipeR}>建造</a>
+    <ul .nav .navbar-nav .navbar-right>
+      $maybe (Entity _ user) <- muser
+        <li .dropdown>
+          <a href="#" .dropdown-toggle data-toggle="dropdown">
+            #{userIdent user}
+            <b .caret>
+          <ul .dropdown-menu>
             <li>
-              <a href="@{AuthR twitterUrl}">ログイン
+              <a href="@{AuthR LogoutR}">ログアウト
+      $nothing
+        <li>
+          <a href="@{AuthR twitterUrl}">ログイン
 

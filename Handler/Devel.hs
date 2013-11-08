@@ -28,8 +28,9 @@ equipClassTree = do
       });
     |]
     [whamlet|
-    $forall (Entity classid equipClass) <- equipclasses
-      <ul .nav .nav-list .tree>
+  <div .bs-docs-sidebar>
+    <ul .nav .tabs .stacked>
+      $forall (Entity classid equipClass) <- equipclasses
         <li><label class="tree-toggler nav-header">#{equipmentClassName equipClass}</label>
           ^{equipTree classid}
    |]
@@ -63,10 +64,10 @@ getDevelR = do
   <div .page-header>
     <h2>開発
   <div .row>
-    <div .span6>
+    <div .col-md-6>
       ^{table}
       ^{equipClassTree}
-    <div .span6>
+    <div .col-md-6>
       <div .well>
         $maybe _ <- muser
         $nothing
