@@ -28,11 +28,16 @@ equipClassTree = do
       });
     |]
     [whamlet|
-  <div .bs-docs-sidebar>
-    <ul .nav .tabs .stacked>
+  <div .panel-group id="accordion">
+    <div .panel .panel-default>
       $forall (Entity classid equipClass) <- equipclasses
-        <li><label class="tree-toggler nav-header">#{equipmentClassName equipClass}</label>
-          ^{equipTree classid}
+        <div .panel-heading>
+          <div .panel-title>
+            <a data-toggle="collapse" data-parent="#accordion" href="##{equipmentClassName equipClass}">
+              #{equipmentClassName equipClass}
+        <div id="#{equipmentClassName equipClass}" .panel-collapse .collapse>
+          <div .panel-body>
+            ^{equipTree classid}
    |]
 
 
@@ -40,9 +45,9 @@ equipTree :: EquipmentClassId -> Widget
 equipTree classid = do
   equips <- handlerToWidget $ runDB $ selectList [EquipmentType ==. classid] [Asc EquipmentId]
   [whamlet|
-   <ul .nav .nav-list .tree>
+   <ul .list-group>
      $forall (Entity equipid equip) <- equips
-       <li>
+       <li .list-group-item>
          <a href=@{EquipmentR $ pack $ equipmentName equip}>#{equipmentName equip}
   |]
 
