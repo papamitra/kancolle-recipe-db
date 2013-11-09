@@ -64,10 +64,11 @@ getDevelR = do
   <div .page-header>
     <h2>開発
   <div .row>
-    <div .col-md-6>
-      ^{table}
+    <div .col-md-2>
       ^{equipClassTree}
-    <div .col-md-6>
+    <div .col-md-5>
+      ^{table}
+    <div .col-md-5>
       <div .well>
         $maybe _ <- muser
         $nothing

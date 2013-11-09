@@ -56,37 +56,39 @@ recipeForm recipe createds extra = do
                     <div .row>
                       <label .control-label .col-md-2 for=##{fvId fHqLv}>
                         #{fvLabel fHqLv}
-                      <div .col-md-3>
+                      <div .col-md-4>
                         ^{fvInput fHqLv}
 
                   <div .form-group>
                     <div .row>
                       <label .control-label .col-md-2 for=##{fvId fSecId}>
                         #{fvLabel fSecId}
-                      <div .col-md-3>
+                      <div .col-md-5>
                         ^{fvInput fSecId}
-                      <div .input-group .col-md-3>
+                      <div .input-group .col-md-5>
                         <span .input-group-addon>
                           Lv
                         ^{fvInput fSecLv}
                       <div .col-md-4>
 
-                  <div .form-group>
+                  <div .form-group> 
                     <div .row>
-                      <div .form-inline>
-                        <div .input-group .col-md-3>
+                      <label .control-label .col-md-2>資源
+                      <div .col-md-5>
+                        <div .input-group>
                           <span .input-group-addon>燃</span>^{fvInput fFuel}
-                        <div .input-group .col-md-3>
+                        <div .input-group>
                           <span .input-group-addon>弾</span>^{fvInput fAmm}
-                        <div .input-group .col-md-3>
+                      <div .col-md-5>
+                        <div .input-group>
                           <span .input-group-addon>鋼</span>^{fvInput fSteel}
-                        <div .input-group .col-md-3>
+                        <div .input-group>
                           <span .input-group-addon>ボ</span>^{fvInput fBaux}
 
                   <div .form-group>
                     <div .row>
                       $forall cs <- cs3
-                        <div .col-md-4>
+                        <div .col-md-6>
                           $forall (_, fCreatedId) <- cs
                             <div .form-group>^{fvInput fCreatedId}
                    |]
