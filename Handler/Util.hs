@@ -12,6 +12,9 @@ import Text.Printf
 import Data.String(fromString)
 import Control.Monad(forM)
 
+formatPercent :: Int -> Int -> String
+formatPercent num den = printf "%.02f" $ ((fromIntegral num) / (fromIntegral den) * 100 :: Float)
+
 maybeRead = fmap fst . listToMaybe .reads
 
 threesome :: [a] -> [[a]]

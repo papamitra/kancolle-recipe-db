@@ -2,6 +2,7 @@ module Handler.Equipment where
 
 import Data.Text
 import Import
+import Handler.Util(formatPercent)
 
 getEquipmentR :: Text -> Handler Html
 getEquipmentR equipName = do
@@ -24,6 +25,6 @@ getEquipmentR equipName = do
           <tr>
             <td>#{show $ equipmentviewFuel recp}/#{show $ equipmentviewAmm recp}/#{show $ equipmentviewSteel recp}/#{show $ equipmentviewBaux recp}
             <td>#{show $ equipmentviewCount recp}
-            <td>#{show $ ((*) 100 ((/) (fromIntegral (equipmentviewCount recp)) (fromIntegral (equipmentviewTotal recp)))) } %
+            <td>#{formatPercent (equipmentviewCount recp) (equipmentviewTotal recp) } %
 |]
 

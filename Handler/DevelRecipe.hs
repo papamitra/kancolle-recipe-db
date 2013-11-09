@@ -1,6 +1,8 @@
 module Handler.DevelRecipe where
 
 import Import
+import Text.Printf(printf)
+import Handler.Util(formatPercent)
 
 getDevelRecipeR :: Int -> Int -> Int -> Int -> Handler Html
 getDevelRecipeR fuel amm steel baux = do
@@ -11,8 +13,9 @@ getDevelRecipeR fuel amm steel baux = do
     setTitle "開発レシピ"
     $(widgetFile "navbar")
     recipeTable recipes
-  where recipeTable recipes = let recipecount = foldl (+) 0 $ map (\(Entity _ recp) -> developrecipeviewEquipcount recp)recipes
-                              in [whamlet|
+  where
+    recipeTable recipes = let recipecount = foldl (+) 0 $ map (\(Entity _ recp) -> developrecipeviewEquipcount recp)recipes
+                          in [whamlet|
   <div .page-header>
     <h2>開発 #{show fuel}/#{show amm}/#{show steel}/#{show baux}
     <table .table>
@@ -25,7 +28,6 @@ getDevelRecipeR fuel amm steel baux = do
           <tr>
             <td>#{developrecipeviewEquipname recp}
             <td>#{show $ developrecipeviewEquipcount recp}
-            <td>#{show $ ((*) 100 ((/) (fromIntegral (developrecipeviewEquipcount recp)) (fromIntegral recipecount))) } %
+            <td>#{formatPercent (developrecipeviewEquipcount recp) recipecount} %
 |]
-
       
