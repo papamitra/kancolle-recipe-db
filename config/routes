@@ -10,3 +10,4 @@
 /devel DevelR GET POST
 /develrecipe/#Int/#Int/#Int/#Int DevelRecipeR GET
 /equipment/#Text EquipmentR GET
+/develrecipe DevelRecipeAllR GET

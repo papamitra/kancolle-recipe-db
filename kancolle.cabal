@@ -26,6 +26,7 @@ library
                      Handler.Devel
                      Handler.DevelRecipe
                      Handler.Equipment
+                     Handler.DevelRecipeAll
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
