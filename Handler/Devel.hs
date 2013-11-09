@@ -32,10 +32,9 @@ equipClassTree = do
     <div .panel .panel-default>
       $forall (Entity classid equipClass) <- equipclasses
         <div .panel-heading>
-          <div .panel-title>
-            <a data-toggle="collapse" data-parent="#accordion" href="##{equipmentClassName equipClass}">
-              #{equipmentClassName equipClass}
-        <div id="#{equipmentClassName equipClass}" .panel-collapse .collapse>
+          <a data-toggle="collapse" data-parent="#accordion" href="##{equipmentClassName equipClass}">
+            #{equipmentClassName equipClass}
+        <div id="#{equipmentClassName equipClass}" .panel-collapse .collapse >
           <div .panel-body>
             ^{equipTree classid}
    |]
@@ -72,18 +71,24 @@ getDevelR = do
     <div .col-md-2>
       ^{equipClassTree}
     <div .col-md-5>
-      ^{table}
+      <div .panel .panel-default>
+        <div .panel-heading>
+          最近の入力
+        <div .panel-body>
+          ^{table}
     <div .col-md-5>
-      <div .well>
-        $maybe _ <- muser
-        $nothing
-          <div .alert .alert-info>
-            現在未ログインです.
-        <h3>開発入力
-        <form method=post action=@{DevelR} entype=#{enctype}>
-          ^{widget}
-  
-           <input type=submit class="btn btn-primary" value="submit">
+      <div .panel .panel-default>
+        <div .panel-heading>
+          開発入力
+        <div .panel-body>
+          $maybe _ <- muser
+          $nothing
+            <div .alert .alert-info>
+              現在未ログインです.
+          <form method=post action=@{DevelR} entype=#{enctype}>
+            ^{widget}
+    
+             <input type=submit class="btn btn-primary" value="submit">
 |]
 
 
