@@ -36,9 +36,9 @@ getRecipeR = do
   <div .page-header>
     <h2>建造
   <div .row>
-    <div .span6>
+    <div .col-md-6>
       ^{table}
-    <div .span6>
+    <div .col-md-5>
       <div .well>
         $maybe _ <- muser
         $nothing
