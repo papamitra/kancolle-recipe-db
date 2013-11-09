@@ -69,6 +69,10 @@ getDevelR = do
     <h2>開発
   <div .row>
     <div .col-md-2>
+      <ul .list-group>
+        <li .list-group-item>
+          <a href=@{DevelRecipeAllR}>
+            開発レシピ一覧
       ^{equipClassTree}
     <div .col-md-5>
       <div .panel .panel-default>

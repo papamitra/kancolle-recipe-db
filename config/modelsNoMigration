@@ -37,3 +37,10 @@ Equipmentview
     count Int
     total Int
 
+Develrecipeallview
+    cnt Int
+    fuel Int
+    amm Int
+    steel Int
+    baux Int
+
