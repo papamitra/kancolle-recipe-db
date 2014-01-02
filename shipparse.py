@@ -1,27 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# curl view-source:http://www56.atwiki.jp/kancolle/pages/18.html | python shipparse.py
+# curl http://www56.atwiki.jp/kancolle/pages/18.html | python shipparse.py
 
 import sys
 import re
 
-re_str = r"<!--(\d+)-(\d+)--><td.*?>(?:<a.*?>)?(.*?)(?:</a>)?</td>"
+re_str = r"<!--(?P<row>\d+)-(?P<key>\d+)--><td.*?>(?:<a.*?>)?(?P<value>.*?)(?:</a>)?</td>"
 ships = {}
 
 for line in sys.stdin:
     m = re.search(re_str, line)
     if m:
-        row = int(m.group(1))
-        key = int(m.group(2))
-        value = m.group(3)
+        row = int(m.group('row'))
+        key = int(m.group('key'))
+        value = m.group('value')
         if not ships.has_key(row):
             ships[row] = {}
 
-        ships[row][key] = value
+        if not ships[row].has_key(key):
+            ships[row][key] = value
 
 for (row, ship) in ships.items():
-    if (not ship.has_key(1)) or ship[1]=="" or ship[1]=="艦名" :
+    if (not ship.has_key(1)) or ship[0]=="" or ship[1] == "" or ship[1]=="艦名" :
         del ships[row]
 
 max_shipno = 1
@@ -31,7 +32,7 @@ try:
         for line in f.readlines():
             (id, name) = line.rstrip().split(",")
             shipcsv[name] = int(id)
-    max_shipno = max(shipcsv.values()) + 1
+    max_shipno = 1 if len(shipcsv.values()) == 0 else max(shipcsv.values()) + 1
 except IOError as (errno, strerror):
     print >> sys.stderr, strerror
 
